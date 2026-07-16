@@ -19,10 +19,13 @@ const api = {
     saveMnemonic: (mnemonic) => ipcRenderer.invoke('wallet:saveMnemonic', mnemonic),
     generateWallets: (count) => ipcRenderer.invoke('wallet:generateWallets', count),
     getAllWallets: () => ipcRenderer.invoke('wallet:getAllWallets'),
+    getWalletById: (id) => ipcRenderer.invoke('wallet:getWalletById', id),
     updateWallet: (id, updates) => ipcRenderer.invoke('wallet:updateWallet', id, updates),
     deleteWallet: (id) => ipcRenderer.invoke('wallet:deleteWallet', id),
     importFromPrivateKey: (privateKey, name) => 
       ipcRenderer.invoke('wallet:importFromPrivateKey', privateKey, name),
+    importFromMnemonic: (mnemonic, count) => 
+      ipcRenderer.invoke('wallet:importFromMnemonic', mnemonic, count),
   },
 
   // Blockchain APIs
@@ -46,6 +49,7 @@ const api = {
     resumeQueue: () => ipcRenderer.invoke('transaction:resumeQueue'),
     cancelTransaction: (txId) => ipcRenderer.invoke('transaction:cancelTransaction', txId),
     clearQueue: () => ipcRenderer.invoke('transaction:clearQueue'),
+    getHistory: () => ipcRenderer.invoke('transaction:getHistory'),
   },
 
   // RPC APIs
@@ -56,6 +60,15 @@ const api = {
     deleteEndpoint: (id) => ipcRenderer.invoke('rpc:deleteEndpoint', id),
     switchRpc: (rpcUrl) => ipcRenderer.invoke('rpc:switchRpc', rpcUrl),
   },
+
+  // Activity Log APIs
+  activity: {
+    getAll: () => ipcRenderer.invoke('activity:getAll'),
+    getByType: (type) => ipcRenderer.invoke('activity:getByType', type),
+    getPaginated: (page, limit) => ipcRenderer.invoke('activity:getPaginated', page, limit),
+  },
 };
 
 contextBridge.exposeInMainWorld('electronAPI', api);
+
+console.log('[Preload] Preload script loaded - API exposed to renderer');
